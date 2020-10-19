@@ -18,6 +18,8 @@ let grid = [];
 let current;
 let stack = [];
 let p_maze_done = false;
+let p_setup_game = false;
+let p_won_game = false;
 
 function preload() {
   hurray = loadSound("hurray.wav");
@@ -97,8 +99,6 @@ function removeWalls(a, b) {
   }
 }
 
-let p_setup_game = false;
-
 function setup_game() {
   for (let cell of grid) {
     cell.visited = false;
@@ -115,13 +115,21 @@ function draw_play_game() {
 }
 
 function won_game() {
+  p_won_game = true;
   console.log("yay you won!");
-  hurray.play();
-  setTimeout(() => hurray.stop(), 3000);
+  if (hurray.isLoaded()) {
+    hurray.play();
+  } else {
+    alert("not loaded");
+  }
+  let time = 4500;
+  setTimeout(() => hurray.stop(), time);
   setTimeout(() => {
     setupMaze();
     p_maze_done = false;
-  }, 4500);
+    p_setup_game = false;
+    p_won_game = false;
+  }, time);
 }
 
 function draw() {
@@ -136,15 +144,29 @@ function draw() {
   }
 }
 
-function mouseClicked() {
-  let row = int(mouseY / w);
-  let col = int(mouseX / w);
-  cell = grid[row * cols + col];
-  let connectedNeighbors = cell.connectedNeighbors();
-  for (let x of connectedNeighbors) {
-    if (x.visited) cell.visited = true;
+function mouseEvent() {
+  if (!p_won_game) {
+    let row = int(mouseY / w);
+    let col = int(mouseX / w);
+    cell = grid[row * cols + col];
+    if (cell) {
+      let connectedNeighbors = cell.connectedNeighbors();
+      for (let x of connectedNeighbors) {
+        if (x.visited) cell.visited = true;
+      }
+      if (cell.visited && cell.target) {
+        won_game();
+      }
+    }
   }
-  if (cell.visited && cell.target) {
-    won_game();
-  }
+}
+
+function mouseClicked() {}
+
+function mousePressed() {
+  mouseEvent();
+}
+
+function mouseDragged() {
+  mouseEvent();
 }
