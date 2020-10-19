@@ -13,7 +13,7 @@
 // https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
 let cols, rows;
-let w = 100;
+let w = 133;
 let grid = [];
 let current;
 let stack = [];
@@ -39,7 +39,9 @@ function setupMaze() {
 }
 
 function setup() {
-  createCanvas(600, 600);
+  let wth = Math.min(screen.width, 800);
+  createCanvas(wth, wth);
+
   cols = floor(width / w);
   rows = floor(height / w);
   setupMaze();
