@@ -13,7 +13,7 @@
 // https://en.wikipedia.org/wiki/Maze_generation_algorithm
 
 let cols, rows;
-let w = 80;
+let w = 65;
 let grid = [];
 let current;
 let stack = [];
